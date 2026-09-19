@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#123d32">
-  <title>Medello 2.1 — Old vs ChatGPT</title>
-  <meta name="description" content="Side-by-side review: current ship prototype vs ChatGPT Patient & Family prototype for Medello 2.1 design lock.">
+  <title>Medello — Old Daylight (AI) vs ChatGPT Patient &amp; Family</title>
+  <meta name="description" content="Side-by-side: Tend Daylight AI-prominent design (center sparkle orb) vs ChatGPT Patient &amp; Family prototype (labelled 5-tab Family chrome).">
   <style>
     :root {
       --ink: #19372e;
@@ -17,6 +17,7 @@
       --line: #dfe6dc;
       --white: #fff;
       --amber-bg: #fcf0d9;
+      --rose-bg: #faece7;
       --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "DM Sans", sans-serif;
       --display: "Manrope", var(--font);
     }
@@ -46,10 +47,10 @@
     }
     .top h1 {
       margin: 0 0 10px;
-      font: 750 28px/1.2 var(--display);
+      font: 750 26px/1.2 var(--display);
       letter-spacing: -.6px;
     }
-    .top p { margin: 0; color: #c5d6cb; max-width: 62ch; font-size: 14px; }
+    .top p { margin: 0; color: #c5d6cb; max-width: 68ch; font-size: 14px; }
     .top .links { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
     .top .links a {
       display: inline-flex;
@@ -64,6 +65,24 @@
       font-weight: 650;
     }
     .top .links a:hover { background: #265746; }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1a4538;
+      border: 1px solid #2a5c4c;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #e4f0e6;
+    }
+    .legend strong { color: var(--lime); font-weight: 750; }
     .nav-sticky {
       position: sticky;
       top: 0;
@@ -95,16 +114,50 @@
     }
     .nav-sticky a:hover { background: #dce5d5; }
     .wrap { max-width: 1100px; margin: 0 auto; padding: 22px 16px 80px; }
-    .intro {
+    .punch {
       background: var(--white);
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 18px 18px 14px;
+      padding: 18px 18px 16px;
       margin-bottom: 28px;
+      scroll-margin-top: 64px;
     }
-    .intro h2 { margin: 0 0 8px; font: 750 18px var(--display); }
-    .intro ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
-    .intro li { margin: 5px 0; }
+    .punch h2 { margin: 0 0 10px; font: 750 18px var(--display); }
+    .punch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 720px) {
+      .punch-grid { grid-template-columns: 1fr; }
+      .top h1 { font-size: 22px; }
+    }
+    .punch-col {
+      background: #f7faf5;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .punch-col h3 {
+      margin: 0 0 8px;
+      font: 750 13px var(--display);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .punch-col.dropped h3 { color: #a74734; }
+    .punch-col.added h3 { color: #176249; }
+    .punch-col ul { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--muted); }
+    .punch-col li { margin: 5px 0; }
+    .punch-col li strong { color: var(--ink); }
+    .note-box {
+      background: #eaf2f7;
+      border: 1px solid #d4e3ed;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #325f78;
+      margin-top: 12px;
+    }
     .screen {
       margin-bottom: 42px;
       scroll-margin-top: 64px;
@@ -135,7 +188,6 @@
     }
     @media (max-width: 720px) {
       .pair { grid-template-columns: 1fr; }
-      .top h1 { font-size: 24px; }
     }
     .col {
       background: var(--white);
@@ -163,6 +215,8 @@
       text-transform: uppercase;
       letter-spacing: .06em;
     }
+    .col.old-side .col-label strong { color: #855319; }
+    .col.new-side .col-label strong { color: #176249; }
     .phone-frame {
       display: block;
       width: 100%;
@@ -197,26 +251,29 @@
       gap: 8px;
     }
     .placeholder strong { color: var(--ink); font-size: 15px; }
-    .placeholder p { margin: 0; font-size: 13px; max-width: 28ch; }
-    .gaps {
+    .placeholder p { margin: 0; font-size: 13px; max-width: 30ch; }
+    .ai-callout {
       margin-top: 12px;
       background: var(--amber-bg);
       border: 1px solid #edd9b5;
       border-radius: 14px;
       padding: 14px 16px;
     }
-    .gaps h3 {
+    .ai-callout h3 {
       margin: 0 0 6px;
       font: 750 13px var(--display);
       letter-spacing: .04em;
       text-transform: uppercase;
       color: #855319;
     }
-    .gaps ul { margin: 0; padding-left: 18px; font-size: 13px; color: #5c4a2e; }
-    .gaps li { margin: 4px 0; }
-    .gaps.same { background: #eaf2e4; border-color: #c9d9be; }
-    .gaps.same h3 { color: #3c6148; }
-    .gaps.same ul { color: #4a6148; }
+    .ai-callout ul { margin: 0; padding-left: 18px; font-size: 13px; color: #5c4a2e; }
+    .ai-callout li { margin: 4px 0; }
+    .ai-callout.newish {
+      background: #eaf2e4;
+      border-color: #c9d9be;
+    }
+    .ai-callout.newish h3 { color: #3c6148; }
+    .ai-callout.newish ul { color: #4a6148; }
     .section-block {
       margin-top: 48px;
       padding-top: 8px;
@@ -230,7 +287,7 @@
     .section-block > p { color: var(--muted); font-size: 14px; margin: 0 0 18px; max-width: 70ch; }
     .badge-oos {
       display: inline-block;
-      background: #faece7;
+      background: var(--rose-bg);
       color: #a74734;
       border: 1px solid #edcec3;
       border-radius: 999px;
@@ -251,39 +308,6 @@
     @media (max-width: 560px) {
       .grid3 { grid-template-columns: 1fr; }
     }
-    .tf-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
-    }
-    .tf-item {
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 8px;
-      text-align: center;
-    }
-    .tf-item img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      display: block;
-    }
-    .tf-item figcaption {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 6px;
-      font-weight: 650;
-    }
-    .note-box {
-      background: #eaf2f7;
-      border: 1px solid #d4e3ed;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 13px;
-      color: #325f78;
-      margin-bottom: 16px;
-    }
     footer.page-foot {
       max-width: 1100px;
       margin: 0 auto;
@@ -296,68 +320,98 @@
 <body>
   <header class="top">
     <div class="top-inner">
-      <p class="eyebrow">Medello · App Store 2.1 review</p>
-      <h1>Medello 2.1 — Old vs ChatGPT</h1>
+      <p class="eyebrow">Medello · Design compare (corrected)</p>
+      <h1>Medello — Old Daylight (AI) vs ChatGPT Patient &amp; Family</h1>
       <p>
-        Side-by-side for Harish: <strong>Current ship</strong> (interactive prototype)
-        vs <strong>ChatGPT Patient &amp; Family</strong> (target polish).
-        Use this to finish design changes before locking chrome for native.
+        Correct pairing for Harish: <strong>Old = Tend Daylight AI-prominent</strong>
+        (center sparkle / AI orb in the tab bar + AI actions beside doses)
+        vs <strong>ChatGPT Patient &amp; Family</strong>
+        (labelled 5-tab chrome with Family — no center AI orb).
+        Previous compare was wrong (both sides were ChatGPT-derived).
       </p>
+      <div class="legend">
+        <span><strong>Old · Daylight + AI orb</strong> — 4 tabs + center sparkle</span>
+        <span><strong>ChatGPT · Patient &amp; Family</strong> — 5 labelled tabs · Family</span>
+      </div>
       <div class="links">
-        <a href="./">← Interactive prototype</a>
-        <a href="https://drharish14-tech.github.io/medello-2.1-prototype/">Live ship Pages</a>
+        <a href="./">← Interactive 2.1 prototype</a>
+        <a href="https://drharish14-tech.github.io/medello-2.1-prototype/">Live Pages</a>
       </div>
     </div>
   </header>
 
   <nav class="nav-sticky" aria-label="Screens">
     <div class="nav-sticky-inner">
+      <a href="#punch">Punch list</a>
       <a href="#today">Today</a>
       <a href="#meds">Meds</a>
-      <a href="#family">Family</a>
       <a href="#progress">Progress</a>
       <a href="#settings">Settings</a>
-      <a href="#paywall">Paywall</a>
-      <a href="#add">Add</a>
+      <a href="#add">Add (old)</a>
+      <a href="#holding">Hold-to-take</a>
+      <a href="#reminder">Reminder</a>
+      <a href="#family">Family (new)</a>
       <a href="#onboarding">Onboarding</a>
       <a href="#caregiver">Caregiver (oos)</a>
-      <a href="#tf">TF frames</a>
     </div>
   </nav>
 
   <main class="wrap">
-    <section class="intro">
-      <h2>How to read this</h2>
-      <ul>
-        <li><strong>Current ship</strong> = live interactive prototype at this repo (what App Store 2.1 is iterating).</li>
-        <li><strong>ChatGPT prototype</strong> = Patient &amp; Family design pack PNGs (target look / copy).</li>
-        <li>Ship chrome was adapted from the same pack — many pairs are already very close. Gap notes call out real deltas only.</li>
-        <li>Caregiver dashboard screens are labeled <em>Not shipping in 2.1</em>.</li>
-      </ul>
+    <section class="punch" id="punch">
+      <h2>Punch list — what changed</h2>
+      <div class="punch-grid">
+        <div class="punch-col dropped">
+          <h3>ChatGPT removed (vs Daylight AI)</h3>
+          <ul>
+            <li><strong>Center AI orb / sparkle</strong> in the tab bar (opened Tend chat).</li>
+            <li><strong>AI sparkle buttons</strong> beside each med row on Meds (Ask AI).</li>
+            <li><strong>Hold to take</strong> press-and-hold CTA on the next-dose card.</li>
+            <li><strong>Tell Tend AI</strong> + “Snap — AI reads…” paths on Add.</li>
+            <li><strong>Ask about your medicines…</strong> chat sheet entry from the orb.</li>
+            <li>Floating coral <strong>+</strong> FAB over Today (Daylight pattern).</li>
+          </ul>
+        </div>
+        <div class="punch-col added">
+          <h3>ChatGPT added</h3>
+          <ul>
+            <li><strong>Family</strong> as a labelled 5th tab (replaces the center orb slot).</li>
+            <li><strong>Your people.</strong> patient Family screen (Alex card, check-in, quiet hours).</li>
+            <li>Dose actions as explicit <strong>Log</strong> (Taken / Snooze / Skip) instead of Hold-to-take + Ask AI.</li>
+            <li>Onboarding <strong>welcome + role</strong> frames (patient vs caregiver) — new chrome.</li>
+            <li>Copy / layout refresh: “Your day.”, timeline card, unconfirmed Review banner.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>2.1 App Store direction (facts → recommendation):</strong>
+        Family chrome is in the ChatGPT Patient &amp; Family pack and matches the interactive prototype’s 5-tab nav.
+        Full center AI orb + Tell AI / Ask AI CTAs are Daylight-era and are <em>not</em> in the ChatGPT pack.
+        Per PR #38 direction: keep Family chrome for 2.1; do not ship the full AI orb as primary chrome.
+      </div>
     </section>
 
     <!-- TODAY -->
     <article class="screen" id="today">
       <div class="screen-head">
         <h2>Today</h2>
-        <span class="tag">Core tab · ?screen=today</span>
+        <span class="tag">Paired · both sides</span>
       </div>
       <div class="pair">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
-          <div class="phone-frame"><img src="compare/old/today.png" alt="Ship Today screen" width="390" height="844" loading="lazy"></div>
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>Daylight</span></div>
+          <div class="phone-frame"><img src="compare/old/today.png" alt="Daylight Today — AI orb, Hold to take" width="390" height="844" loading="lazy"></div>
         </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
-          <div class="phone-frame"><img src="compare/chatgpt/today.png" alt="ChatGPT Today screen" width="390" height="844" loading="lazy"></div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>ChatGPT</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/today.png" alt="ChatGPT Today — Family tab, Log" width="390" height="844" loading="lazy"></div>
         </div>
       </div>
-      <div class="gaps">
-        <h3>Gap notes</h3>
+      <div class="ai-callout">
+        <h3>AI callout</h3>
         <ul>
-          <li>Layout, timeline card, nav (5 tabs incl. Family), and sample meds match closely — ship already ports this chrome.</li>
-          <li>Review banner copy differs: ship says <em>“Already taken them? Log each dose below.”</em>; ChatGPT pack uses <em>“Add the time below”</em> plus a <em>Review →</em> control.</li>
-          <li>Unconfirmed marker treatment may differ slightly (clock vs concentric ring) — pick one and lock.</li>
+          <li><strong>Tab chrome:</strong> Daylight = 4 labelled tabs + <em>center sparkle orb</em>. ChatGPT = 5 labelled tabs with <em>Family</em> in the center — <em>no AI orb</em>.</li>
+          <li><strong>Dose action:</strong> Daylight next-dose card uses <em>Hold to take</em> (+ Snooze / Preview reminder). ChatGPT dose rows use <em>Log</em> (opens Taken / Snooze / Skip).</li>
+          <li><strong>Add entry:</strong> Daylight floats a coral <em>+</em> FAB. ChatGPT has no FAB on this frame (add is elsewhere / ship sheet).</li>
         </ul>
       </div>
     </article>
@@ -366,49 +420,24 @@
     <article class="screen" id="meds">
       <div class="screen-head">
         <h2>Meds</h2>
-        <span class="tag">Core tab · ?screen=medicines</span>
+        <span class="tag">Paired · both sides</span>
       </div>
       <div class="pair">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
-          <div class="phone-frame"><img src="compare/old/meds.png" alt="Ship Meds screen" width="390" height="844" loading="lazy"></div>
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>Daylight</span></div>
+          <div class="phone-frame"><img src="compare/old/meds.png" alt="Daylight Meds — Ask AI sparkles beside rows" width="390" height="844" loading="lazy"></div>
         </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
-          <div class="phone-frame"><img src="compare/chatgpt/meds.png" alt="ChatGPT Meds screen" width="390" height="844" loading="lazy"></div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>ChatGPT</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/meds.png" alt="ChatGPT Meds — no AI sparkles" width="390" height="844" loading="lazy"></div>
         </div>
       </div>
-      <div class="gaps same">
-        <h3>Gap notes</h3>
+      <div class="ai-callout">
+        <h3>AI callout</h3>
         <ul>
-          <li>Nearly identical: “Your medicines.”, search, By condition / All medicines, condition cards (Diabetes / Blood pressure / Daily supplement).</li>
-          <li>No meaningful visual delta for 2.1 lock — keep ship as-is unless copy polish is requested.</li>
-        </ul>
-      </div>
-    </article>
-
-    <!-- FAMILY -->
-    <article class="screen" id="family">
-      <div class="screen-head">
-        <h2>Family</h2>
-        <span class="tag">Core tab · ?screen=family</span>
-      </div>
-      <div class="pair">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
-          <div class="phone-frame"><img src="compare/old/family.png" alt="Ship Family screen" width="390" height="844" loading="lazy"></div>
-        </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
-          <div class="phone-frame"><img src="compare/chatgpt/family.png" alt="ChatGPT Family screen" width="390" height="844" loading="lazy"></div>
-        </div>
-      </div>
-      <div class="gaps">
-        <h3>Gap notes</h3>
-        <ul>
-          <li>Same structure: “Your people.”, Alex connected card, 60 min check-in, quiet hours, What Alex can see / Check-in rules / Shared activity / Privacy.</li>
-          <li>Ship adds an explicit <em>Not in 2.1</em> pill and one-time share-sheet mocks when rows are tapped — ChatGPT art is the static target without those ship-only labels.</li>
-          <li>Privacy card copy (“AI conversations and private notes…”) matches both.</li>
+          <li><strong>Beside each med:</strong> Daylight shows a breathing green <em>sparkle</em> button (Ask AI about that medicine). ChatGPT lists meds with no per-row AI CTA.</li>
+          <li><strong>Tab chrome:</strong> same orb-vs-Family contrast as Today — Daylight center orb vs ChatGPT labelled Family tab.</li>
+          <li>Both keep By condition / All medicines structure; ChatGPT retitles to “Your medicines.” and drops AI affordances.</li>
         </ul>
       </div>
     </article>
@@ -417,23 +446,23 @@
     <article class="screen" id="progress">
       <div class="screen-head">
         <h2>Progress</h2>
-        <span class="tag">Core tab · ?screen=progress</span>
+        <span class="tag">Paired · both sides</span>
       </div>
       <div class="pair">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
-          <div class="phone-frame"><img src="compare/old/progress.png" alt="Ship Progress screen" width="390" height="844" loading="lazy"></div>
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>Daylight</span></div>
+          <div class="phone-frame"><img src="compare/old/progress.png" alt="Daylight Progress with AI orb" width="390" height="844" loading="lazy"></div>
         </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
-          <div class="phone-frame"><img src="compare/chatgpt/progress.png" alt="ChatGPT Progress screen" width="390" height="844" loading="lazy"></div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>ChatGPT</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/progress.png" alt="ChatGPT Progress with Family tab" width="390" height="844" loading="lazy"></div>
         </div>
       </div>
-      <div class="gaps same">
-        <h3>Gap notes</h3>
+      <div class="ai-callout">
+        <h3>AI callout</h3>
         <ul>
-          <li>Nearly identical: “Your week.”, This week / This month, 29 of 35 chart, skipped / unconfirmed metrics, pattern callout.</li>
-          <li>Ship insight card (“A pattern to look at”) aligns with the pack — no material gap.</li>
+          <li><strong>Chrome only:</strong> Progress content is adherence charting on both sides. The AI delta is still the tab bar — Daylight center orb vs ChatGPT Family tab.</li>
+          <li>Daylight also has a refill-card variant (<a href="#refill">see Refill</a>) that sits on Progress; ChatGPT pack has no separate refill frame.</li>
         </ul>
       </div>
     </article>
@@ -442,119 +471,203 @@
     <article class="screen" id="settings">
       <div class="screen-head">
         <h2>Settings</h2>
-        <span class="tag">Core tab · ?screen=settings</span>
+        <span class="tag">Paired · both sides</span>
       </div>
       <div class="pair">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
-          <div class="phone-frame"><img src="compare/old/settings.png" alt="Ship Settings screen" width="390" height="844" loading="lazy"></div>
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>Daylight</span></div>
+          <div class="phone-frame"><img src="compare/old/settings.png" alt="Daylight Settings with AI orb" width="390" height="844" loading="lazy"></div>
         </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
-          <div class="phone-frame"><img src="compare/chatgpt/settings.png" alt="ChatGPT Settings screen" width="390" height="844" loading="lazy"></div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>ChatGPT</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/settings.png" alt="ChatGPT Settings with Family tab" width="390" height="844" loading="lazy"></div>
         </div>
       </div>
-      <div class="gaps">
-        <h3>Gap notes</h3>
+      <div class="ai-callout">
+        <h3>AI callout</h3>
         <ul>
-          <li>Header, Margaret profile card, Everyday care rows (Reminders, Family &amp; caregivers, Ask Medello, Refill planning) match the pack.</li>
-          <li>Ship: Ask Medello / Refill planning / some account rows toast <em>Not in 2.1</em>; Medello Premium routes to the interactive paywall (ChatGPT pack has no paywall art).</li>
+          <li><strong>Tab chrome:</strong> Daylight settings still sit under the 4-tab + orb chrome. ChatGPT settings sit under 5-tab Family chrome.</li>
+          <li>ChatGPT settings surface <em>Family &amp; caregivers</em> / Everyday care rows aligned with the new Family tab; Daylight settings were Tend-era (caregiver toggle, Ask Tend via orb, not a Family tab).</li>
         </ul>
       </div>
     </article>
 
-    <!-- PAYWALL -->
-    <article class="screen" id="paywall">
-      <div class="screen-head">
-        <h2>Paywall</h2>
-        <span class="tag">Ship-only · ?screen=paywall</span>
-      </div>
-      <div class="pair">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
-          <div class="phone-frame"><img src="compare/old/paywall.png" alt="Ship Paywall screen" width="390" height="844" loading="lazy"></div>
-        </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
-          <div class="placeholder">
-            <strong>No ChatGPT source</strong>
-            <p>Patient &amp; Family pack has no Premium / paywall frame. Ship paywall (Terms · Privacy · Restore, Monthly $6.99 / Yearly $49.99) is the 2.1 reference.</p>
-          </div>
-        </div>
-      </div>
-      <div class="gaps">
-        <h3>Gap notes</h3>
-        <ul>
-          <li>Ship includes App Store–style disclosures: Terms / Privacy / Restore + auto-renew copy. Keep these for review.</li>
-          <li>Nothing to port from ChatGPT here — design lock is ship-defined.</li>
-        </ul>
-      </div>
-    </article>
-
-    <!-- ADD -->
+    <!-- OLD-ONLY: ADD -->
     <article class="screen" id="add">
       <div class="screen-head">
         <h2>Add medicine</h2>
-        <span class="tag">Ship flow · ?screen=add</span>
+        <span class="tag">Old-only · Daylight AI-prominent</span>
       </div>
       <div class="pair">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
-          <div class="phone-frame"><img src="compare/old/add.png" alt="Ship Add medicine screen" width="390" height="844" loading="lazy"></div>
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>Daylight</span></div>
+          <div class="phone-frame"><img src="compare/old/add.png" alt="Daylight Add — Snap / Tell Tend AI / Manual" width="390" height="844" loading="lazy"></div>
         </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>No pair</span></div>
           <div class="placeholder">
-            <strong>No ChatGPT source</strong>
-            <p>No dedicated Add-medicine full PNG in the Patient &amp; Family pack. Ship shows scan (Not in 2.1) + manual path.</p>
+            <strong>No ChatGPT pair</strong>
+            <p>Patient &amp; Family pack has no dedicated Add-medicine full PNG. Structural replacement in ship: manual add sheet; photo/scan marked Not in 2.1. No “Tell Tend AI” card.</p>
           </div>
         </div>
       </div>
-      <div class="gaps">
-        <h3>Gap notes</h3>
+      <div class="ai-callout">
+        <h3>AI callout</h3>
         <ul>
-          <li>Ship correctly marks photo/scan as <em>Not in 2.1</em>; manual entry is the in-scope path.</li>
-          <li>If ChatGPT later ships an Add frame, drop it into <code>compare/chatgpt/add.png</code> and refresh this row.</li>
+          <li>Daylight Add is AI-first: <em>Snap the prescription</em> (“AI reads names, doses &amp; timings”), <em>Tell Tend AI</em>, and Enter manually — with the center orb still visible.</li>
+          <li>ChatGPT pack does not show this surface; 2.1 ship should not revive Tell AI / Snap-AI as primary chrome if following the ChatGPT Patient &amp; Family direction.</li>
         </ul>
       </div>
     </article>
 
-    <!-- ONBOARDING -->
+    <!-- OLD-ONLY: HOLDING -->
+    <article class="screen" id="holding">
+      <div class="screen-head">
+        <h2>Hold to take</h2>
+        <span class="tag">Old-only · Daylight interaction</span>
+      </div>
+      <div class="pair">
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>Daylight</span></div>
+          <div class="phone-frame"><img src="compare/old/holding.png" alt="Daylight Hold to take in progress" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>No pair</span></div>
+          <div class="placeholder">
+            <strong>No ChatGPT pair</strong>
+            <p>Structural replacement: per-dose <em>Log</em> → Taken / Snooze / Skip sheet (see ChatGPT Today). No press-and-hold gesture in the Patient &amp; Family pack.</p>
+          </div>
+        </div>
+      </div>
+      <div class="ai-callout">
+        <h3>AI callout</h3>
+        <ul>
+          <li>Daylight’s signature dose confirm is press-and-hold (“Hold to take” → “Keep holding…”).</li>
+          <li>ChatGPT drops Hold-to-take entirely in favor of explicit Log CTAs.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- OLD-ONLY: REMINDER -->
+    <article class="screen" id="reminder">
+      <div class="screen-head">
+        <h2>Reminder</h2>
+        <span class="tag">Old-only · Daylight sheet</span>
+      </div>
+      <div class="pair">
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>Daylight</span></div>
+          <div class="phone-frame"><img src="compare/old/reminder.png" alt="Daylight reminder sheet" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>No pair</span></div>
+          <div class="placeholder">
+            <strong>No ChatGPT pair</strong>
+            <p>No dedicated reminder-sheet PNG in the Patient &amp; Family pack. ChatGPT Today uses unconfirmed + Log / Review instead of a Daylight-style reminder preview sheet.</p>
+          </div>
+        </div>
+      </div>
+      <div class="ai-callout">
+        <h3>AI callout</h3>
+        <ul>
+          <li>Daylight reminder is a modal sheet over the AI-orb chrome (Taken / Snooze from Preview reminder).</li>
+          <li>Not a 1:1 ChatGPT surface — treat as Daylight-only interaction reference.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- OLD-ONLY: REFILL (progress variant) -->
+    <article class="screen" id="refill">
+      <div class="screen-head">
+        <h2>Refill (Progress variant)</h2>
+        <span class="tag">Old-only · Daylight Progress card</span>
+      </div>
+      <div class="pair">
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>Daylight</span></div>
+          <div class="phone-frame"><img src="compare/old/refill.png" alt="Daylight Progress with refill card" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>No pair</span></div>
+          <div class="placeholder">
+            <strong>No ChatGPT pair</strong>
+            <p>ChatGPT Progress is the single “Your week.” frame above. No separate refill-prompt PNG in the pack.</p>
+          </div>
+        </div>
+      </div>
+      <div class="ai-callout">
+        <h3>AI callout</h3>
+        <ul>
+          <li>Same Daylight Progress chrome (center orb). Refill card is content, not an extra AI CTA — listed for completeness of Daylight Progress variants.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- CHATGPT-ONLY: FAMILY -->
+    <article class="screen" id="family">
+      <div class="screen-head">
+        <h2>Family tab</h2>
+        <span class="tag">ChatGPT-only · new for 2.1 chrome</span>
+      </div>
+      <div class="pair">
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>No pair</span></div>
+          <div class="placeholder">
+            <strong>No old pair</strong>
+            <p>Daylight had no Family tab. Center slot was the AI sparkle orb (opens chat), not a labelled Family destination. Caregiver lived as settings / separate flows.</p>
+          </div>
+        </div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · Patient &amp; Family</strong><span>New chrome</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/family.png" alt="ChatGPT Family — Your people" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="ai-callout newish">
+        <h3>AI callout</h3>
+        <ul>
+          <li><strong>This is the chrome swap:</strong> Daylight center AI orb → ChatGPT labelled <em>Family</em> tab showing “Your people.” (Alex connected, check-in cadence, quiet hours, what they can see).</li>
+          <li>Privacy copy still mentions AI conversations staying private — but the primary nav is Family, not an AI orb.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- CHATGPT-ONLY: ONBOARDING -->
     <article class="screen" id="onboarding">
       <div class="screen-head">
         <h2>Onboarding</h2>
-        <span class="tag">ChatGPT pack · skipped in ship (opens on Today)</span>
+        <span class="tag">ChatGPT-only · Daylight had different onboarding</span>
       </div>
       <div class="pair">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>No pair here</span></div>
           <div class="placeholder">
-            <strong>Not in ship 2.1</strong>
-            <p>Interactive prototype skips onboarding and opens on Today. Role / welcome flows are out of ship scope.</p>
+            <strong>Different Daylight onboarding</strong>
+            <p>Daylight phone shot set used for this compare does not include matching welcome/role frames. Old Daylight onboarding was separate / not this ChatGPT role picker.</p>
           </div>
         </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · welcome</strong><span>New</span></div>
           <div class="phone-frame"><img src="compare/chatgpt/onboarding-welcome.png" alt="ChatGPT onboarding welcome" width="390" height="844" loading="lazy"></div>
         </div>
       </div>
       <div class="pair" style="margin-top:16px">
-        <div class="col">
-          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+        <div class="col old-side">
+          <div class="col-label"><strong>Old · Daylight + AI orb</strong><span>No pair</span></div>
           <div class="placeholder">
-            <strong>No ship screen</strong>
-            <p>Role picker not implemented in the ship prototype.</p>
+            <strong>No old pair</strong>
+            <p>Role picker (I’m taking meds / I’m helping someone) is ChatGPT Patient &amp; Family chrome — new for 2.1 direction, not Daylight AI-orb era.</p>
           </div>
         </div>
-        <div class="col">
-          <div class="col-label"><strong>ChatGPT prototype</strong><span>New · role</span></div>
+        <div class="col new-side">
+          <div class="col-label"><strong>ChatGPT · role</strong><span>New</span></div>
           <div class="phone-frame"><img src="compare/chatgpt/onboarding-role.png" alt="ChatGPT onboarding role" width="390" height="844" loading="lazy"></div>
         </div>
       </div>
-      <div class="gaps">
-        <h3>Gap notes</h3>
+      <div class="ai-callout newish">
+        <h3>AI callout</h3>
         <ul>
-          <li>Welcome + role screens exist only in the ChatGPT pack — reference for a later release, not 2.1 ship chrome.</li>
+          <li>ChatGPT onboarding establishes patient vs family/caregiver role before chrome — aligns with adding Family as a first-class tab.</li>
+          <li>Interactive 2.1 prototype currently skips onboarding and opens on Today; these frames are reference for chrome direction, not necessarily in-ship for 2.1.</li>
         </ul>
       </div>
     </article>
@@ -563,8 +676,8 @@
     <section class="section-block" id="caregiver">
       <h2>Caregiver screens <span class="badge-oos">Not shipping in 2.1</span></h2>
       <p>
-        ChatGPT Patient &amp; Family pack includes caregiver-facing chrome (dashboard, Margaret’s day, check-in needed).
-        These stay out of App Store 2.1 — shown here for context only.
+        ChatGPT Patient &amp; Family pack includes caregiver-facing frames (dashboard / Margaret’s day / check-in needed).
+        Shown single-column for context only — out of App Store 2.1 scope.
       </p>
       <div class="grid3">
         <div class="col">
@@ -581,59 +694,16 @@
         </div>
       </div>
     </section>
-
-    <!-- TF FRAMES -->
-    <section class="section-block" id="tf">
-      <h2>Build 29 TF frames <span class="tag" style="font-weight:650;color:var(--muted);font-size:13px">(what Apple saw)</span></h2>
-      <p>
-        Optional reference from TestFlight clip frames. These show an earlier chrome:
-        <strong>4 tabs</strong> (Today · Meds · Progress · Settings — <em>no Family</em>),
-        live sample data (e.g. Olmezartan), and “Your day, recorded.” copy.
-        <code>frame-01</code> (Spotlight search) omitted — not app UI.
-      </p>
-      <div class="note-box">
-        Use these only as “what Apple already saw.” Do not regress the 5-tab Family chrome in the ship prototype back to this 4-tab layout.
-      </div>
-      <div class="tf-grid" id="tf-grid">
-        <!-- filled by script from known list for stable order -->
-      </div>
-    </section>
   </main>
 
   <footer class="page-foot">
     <p>
-      Assets: <code>compare/old/</code> (Playwright captures of ship),
-      <code>compare/chatgpt/</code> (cropped from Patient &amp; Family <code>*-full.png</code>),
-      <code>compare/caregiver/</code>, <code>compare/tf-frames/</code>.
-      Interactive prototype: <a href="./">index</a>.
+      Assets: <code>compare/old/</code> = Daylight AI phone PNGs from
+      <code>medello-shots/v2/work/phones/</code>
+      (01_today, 02_holding, 02b_reminder, 03_meds, 04_progress, 05_refill, 07_add, 08_settings).
+      <code>compare/chatgpt/</code> = Patient &amp; Family <code>*-full.png</code>.
+      Caregiver = oos. Interactive prototype: <a href="./">index</a>.
     </p>
   </footer>
-
-  <script>
-    (function () {
-      const frames = [
-        "frame-02.png","frame-03.png","frame-04.png","frame-05.png","frame-06.png","frame-07.png","frame-08.png",
-        "frame_001.png","frame_002.png","frame_003.png","frame_004.png","frame_005.png","frame_006.png","frame_007.png","frame_008.png","frame_009.png","frame_010.png","frame_011.png",
-        "t01.jpg","t02.jpg","t03.jpg","t04.jpg","t05.jpg","t06.jpg","t07.jpg","t08.jpg","t09.jpg","t10.jpg","t11.jpg"
-      ];
-      const grid = document.getElementById("tf-grid");
-      if (!grid) return;
-      const frag = document.createDocumentFragment();
-      frames.forEach(function (name) {
-        const fig = document.createElement("figure");
-        fig.className = "tf-item";
-        const img = document.createElement("img");
-        img.src = "compare/tf-frames/" + name;
-        img.alt = name;
-        img.loading = "lazy";
-        const cap = document.createElement("figcaption");
-        cap.textContent = name.replace(/\.(png|jpg)$/i, "");
-        fig.appendChild(img);
-        fig.appendChild(cap);
-        frag.appendChild(fig);
-      });
-      grid.appendChild(frag);
-    })();
-  </script>
 </body>
 </html>
