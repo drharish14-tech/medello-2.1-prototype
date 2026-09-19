@@ -6,6 +6,12 @@ Interactive, phone-framed patient chrome for **App Store 2.1** review. Visual sy
 
 **https://drharish14-tech.github.io/medello-2.1-prototype/**
 
+### Old vs ChatGPT compare
+
+**https://drharish14-tech.github.io/medello-2.1-prototype/compare.html**
+
+Side-by-side of current ship screens vs ChatGPT Patient & Family pack (plus out-of-scope caregiver frames and Build 29 TF reference). Use this to finish design changes before locking chrome for native.
+
 | Query | Screen |
 | --- | --- |
 | `/` or `?screen=today` | Today |

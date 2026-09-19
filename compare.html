@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123d32">
+  <title>Medello 2.1 — Old vs ChatGPT</title>
+  <meta name="description" content="Side-by-side review: current ship prototype vs ChatGPT Patient & Family prototype for Medello 2.1 design lock.">
+  <style>
+    :root {
+      --ink: #19372e;
+      --muted: #607369;
+      --deep: #123d32;
+      --green: #176249;
+      --lime: #d7edac;
+      --bg: #f5f7f2;
+      --line: #dfe6dc;
+      --white: #fff;
+      --amber-bg: #fcf0d9;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "DM Sans", sans-serif;
+      --display: "Manrope", var(--font);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+    a { color: var(--green); }
+    .top {
+      background: var(--deep);
+      color: #eef5ea;
+      padding: 28px 20px 22px;
+    }
+    .top-inner { max-width: 1100px; margin: 0 auto; }
+    .top .eyebrow {
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--lime);
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+    .top h1 {
+      margin: 0 0 10px;
+      font: 750 28px/1.2 var(--display);
+      letter-spacing: -.6px;
+    }
+    .top p { margin: 0; color: #c5d6cb; max-width: 62ch; font-size: 14px; }
+    .top .links { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .top .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1f4a3d;
+      color: #f0f7ec;
+      text-decoration: none;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .top .links a:hover { background: #265746; }
+    .nav-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #f8faf6ee;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-sticky-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .nav-sticky a {
+      flex: 0 0 auto;
+      text-decoration: none;
+      color: var(--ink);
+      background: #e9eee3;
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 13px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .nav-sticky a:hover { background: #dce5d5; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 22px 16px 80px; }
+    .intro {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 18px 14px;
+      margin-bottom: 28px;
+    }
+    .intro h2 { margin: 0 0 8px; font: 750 18px var(--display); }
+    .intro ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .intro li { margin: 5px 0; }
+    .screen {
+      margin-bottom: 42px;
+      scroll-margin-top: 64px;
+    }
+    .screen-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .screen-head h2 {
+      margin: 0;
+      font: 750 22px/1.25 var(--display);
+      letter-spacing: -.4px;
+    }
+    .screen-head .tag {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 720px) {
+      .pair { grid-template-columns: 1fr; }
+      .top h1 { font-size: 24px; }
+    }
+    .col {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px 12px 14px;
+      min-width: 0;
+    }
+    .col-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+    .col-label strong {
+      font-size: 13px;
+      letter-spacing: .02em;
+    }
+    .col-label span {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .phone-frame {
+      display: block;
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid #c9d5c3;
+      background: #e8eee3;
+      box-shadow: 0 10px 28px #1e3a2814;
+    }
+    .phone-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: top;
+    }
+    .placeholder {
+      max-width: 340px;
+      margin: 0 auto;
+      min-height: 420px;
+      border-radius: 28px;
+      border: 1px dashed #b7c7b0;
+      background: #eef3ea;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px 22px;
+      color: var(--muted);
+      gap: 8px;
+    }
+    .placeholder strong { color: var(--ink); font-size: 15px; }
+    .placeholder p { margin: 0; font-size: 13px; max-width: 28ch; }
+    .gaps {
+      margin-top: 12px;
+      background: var(--amber-bg);
+      border: 1px solid #edd9b5;
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .gaps h3 {
+      margin: 0 0 6px;
+      font: 750 13px var(--display);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: #855319;
+    }
+    .gaps ul { margin: 0; padding-left: 18px; font-size: 13px; color: #5c4a2e; }
+    .gaps li { margin: 4px 0; }
+    .gaps.same { background: #eaf2e4; border-color: #c9d9be; }
+    .gaps.same h3 { color: #3c6148; }
+    .gaps.same ul { color: #4a6148; }
+    .section-block {
+      margin-top: 48px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      scroll-margin-top: 64px;
+    }
+    .section-block h2 {
+      font: 750 22px var(--display);
+      margin: 0 0 8px;
+    }
+    .section-block > p { color: var(--muted); font-size: 14px; margin: 0 0 18px; max-width: 70ch; }
+    .badge-oos {
+      display: inline-block;
+      background: #faece7;
+      color: #a74734;
+      border: 1px solid #edcec3;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 900px) {
+      .grid3 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .grid3 { grid-template-columns: 1fr; }
+    }
+    .tf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .tf-item {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+    }
+    .tf-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+    .tf-item figcaption {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      font-weight: 650;
+    }
+    .note-box {
+      background: #eaf2f7;
+      border: 1px solid #d4e3ed;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #325f78;
+      margin-bottom: 16px;
+    }
+    footer.page-foot {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px 40px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <p class="eyebrow">Medello · App Store 2.1 review</p>
+      <h1>Medello 2.1 — Old vs ChatGPT</h1>
+      <p>
+        Side-by-side for Harish: <strong>Current ship</strong> (interactive prototype)
+        vs <strong>ChatGPT Patient &amp; Family</strong> (target polish).
+        Use this to finish design changes before locking chrome for native.
+      </p>
+      <div class="links">
+        <a href="./">← Interactive prototype</a>
+        <a href="https://drharish14-tech.github.io/medello-2.1-prototype/">Live ship Pages</a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-sticky" aria-label="Screens">
+    <div class="nav-sticky-inner">
+      <a href="#today">Today</a>
+      <a href="#meds">Meds</a>
+      <a href="#family">Family</a>
+      <a href="#progress">Progress</a>
+      <a href="#settings">Settings</a>
+      <a href="#paywall">Paywall</a>
+      <a href="#add">Add</a>
+      <a href="#onboarding">Onboarding</a>
+      <a href="#caregiver">Caregiver (oos)</a>
+      <a href="#tf">TF frames</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section class="intro">
+      <h2>How to read this</h2>
+      <ul>
+        <li><strong>Current ship</strong> = live interactive prototype at this repo (what App Store 2.1 is iterating).</li>
+        <li><strong>ChatGPT prototype</strong> = Patient &amp; Family design pack PNGs (target look / copy).</li>
+        <li>Ship chrome was adapted from the same pack — many pairs are already very close. Gap notes call out real deltas only.</li>
+        <li>Caregiver dashboard screens are labeled <em>Not shipping in 2.1</em>.</li>
+      </ul>
+    </section>
+
+    <!-- TODAY -->
+    <article class="screen" id="today">
+      <div class="screen-head">
+        <h2>Today</h2>
+        <span class="tag">Core tab · ?screen=today</span>
+      </div>
+      <div class="pair">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="phone-frame"><img src="compare/old/today.png" alt="Ship Today screen" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/today.png" alt="ChatGPT Today screen" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="gaps">
+        <h3>Gap notes</h3>
+        <ul>
+          <li>Layout, timeline card, nav (5 tabs incl. Family), and sample meds match closely — ship already ports this chrome.</li>
+          <li>Review banner copy differs: ship says <em>“Already taken them? Log each dose below.”</em>; ChatGPT pack uses <em>“Add the time below”</em> plus a <em>Review →</em> control.</li>
+          <li>Unconfirmed marker treatment may differ slightly (clock vs concentric ring) — pick one and lock.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- MEDS -->
+    <article class="screen" id="meds">
+      <div class="screen-head">
+        <h2>Meds</h2>
+        <span class="tag">Core tab · ?screen=medicines</span>
+      </div>
+      <div class="pair">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="phone-frame"><img src="compare/old/meds.png" alt="Ship Meds screen" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/meds.png" alt="ChatGPT Meds screen" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="gaps same">
+        <h3>Gap notes</h3>
+        <ul>
+          <li>Nearly identical: “Your medicines.”, search, By condition / All medicines, condition cards (Diabetes / Blood pressure / Daily supplement).</li>
+          <li>No meaningful visual delta for 2.1 lock — keep ship as-is unless copy polish is requested.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- FAMILY -->
+    <article class="screen" id="family">
+      <div class="screen-head">
+        <h2>Family</h2>
+        <span class="tag">Core tab · ?screen=family</span>
+      </div>
+      <div class="pair">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="phone-frame"><img src="compare/old/family.png" alt="Ship Family screen" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/family.png" alt="ChatGPT Family screen" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="gaps">
+        <h3>Gap notes</h3>
+        <ul>
+          <li>Same structure: “Your people.”, Alex connected card, 60 min check-in, quiet hours, What Alex can see / Check-in rules / Shared activity / Privacy.</li>
+          <li>Ship adds an explicit <em>Not in 2.1</em> pill and one-time share-sheet mocks when rows are tapped — ChatGPT art is the static target without those ship-only labels.</li>
+          <li>Privacy card copy (“AI conversations and private notes…”) matches both.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- PROGRESS -->
+    <article class="screen" id="progress">
+      <div class="screen-head">
+        <h2>Progress</h2>
+        <span class="tag">Core tab · ?screen=progress</span>
+      </div>
+      <div class="pair">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="phone-frame"><img src="compare/old/progress.png" alt="Ship Progress screen" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/progress.png" alt="ChatGPT Progress screen" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="gaps same">
+        <h3>Gap notes</h3>
+        <ul>
+          <li>Nearly identical: “Your week.”, This week / This month, 29 of 35 chart, skipped / unconfirmed metrics, pattern callout.</li>
+          <li>Ship insight card (“A pattern to look at”) aligns with the pack — no material gap.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- SETTINGS -->
+    <article class="screen" id="settings">
+      <div class="screen-head">
+        <h2>Settings</h2>
+        <span class="tag">Core tab · ?screen=settings</span>
+      </div>
+      <div class="pair">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="phone-frame"><img src="compare/old/settings.png" alt="Ship Settings screen" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/settings.png" alt="ChatGPT Settings screen" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="gaps">
+        <h3>Gap notes</h3>
+        <ul>
+          <li>Header, Margaret profile card, Everyday care rows (Reminders, Family &amp; caregivers, Ask Medello, Refill planning) match the pack.</li>
+          <li>Ship: Ask Medello / Refill planning / some account rows toast <em>Not in 2.1</em>; Medello Premium routes to the interactive paywall (ChatGPT pack has no paywall art).</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- PAYWALL -->
+    <article class="screen" id="paywall">
+      <div class="screen-head">
+        <h2>Paywall</h2>
+        <span class="tag">Ship-only · ?screen=paywall</span>
+      </div>
+      <div class="pair">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="phone-frame"><img src="compare/old/paywall.png" alt="Ship Paywall screen" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+          <div class="placeholder">
+            <strong>No ChatGPT source</strong>
+            <p>Patient &amp; Family pack has no Premium / paywall frame. Ship paywall (Terms · Privacy · Restore, Monthly $6.99 / Yearly $49.99) is the 2.1 reference.</p>
+          </div>
+        </div>
+      </div>
+      <div class="gaps">
+        <h3>Gap notes</h3>
+        <ul>
+          <li>Ship includes App Store–style disclosures: Terms / Privacy / Restore + auto-renew copy. Keep these for review.</li>
+          <li>Nothing to port from ChatGPT here — design lock is ship-defined.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ADD -->
+    <article class="screen" id="add">
+      <div class="screen-head">
+        <h2>Add medicine</h2>
+        <span class="tag">Ship flow · ?screen=add</span>
+      </div>
+      <div class="pair">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="phone-frame"><img src="compare/old/add.png" alt="Ship Add medicine screen" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+          <div class="placeholder">
+            <strong>No ChatGPT source</strong>
+            <p>No dedicated Add-medicine full PNG in the Patient &amp; Family pack. Ship shows scan (Not in 2.1) + manual path.</p>
+          </div>
+        </div>
+      </div>
+      <div class="gaps">
+        <h3>Gap notes</h3>
+        <ul>
+          <li>Ship correctly marks photo/scan as <em>Not in 2.1</em>; manual entry is the in-scope path.</li>
+          <li>If ChatGPT later ships an Add frame, drop it into <code>compare/chatgpt/add.png</code> and refresh this row.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ONBOARDING -->
+    <article class="screen" id="onboarding">
+      <div class="screen-head">
+        <h2>Onboarding</h2>
+        <span class="tag">ChatGPT pack · skipped in ship (opens on Today)</span>
+      </div>
+      <div class="pair">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="placeholder">
+            <strong>Not in ship 2.1</strong>
+            <p>Interactive prototype skips onboarding and opens on Today. Role / welcome flows are out of ship scope.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/onboarding-welcome.png" alt="ChatGPT onboarding welcome" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="pair" style="margin-top:16px">
+        <div class="col">
+          <div class="col-label"><strong>Current ship</strong><span>Old</span></div>
+          <div class="placeholder">
+            <strong>No ship screen</strong>
+            <p>Role picker not implemented in the ship prototype.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>ChatGPT prototype</strong><span>New · role</span></div>
+          <div class="phone-frame"><img src="compare/chatgpt/onboarding-role.png" alt="ChatGPT onboarding role" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+      <div class="gaps">
+        <h3>Gap notes</h3>
+        <ul>
+          <li>Welcome + role screens exist only in the ChatGPT pack — reference for a later release, not 2.1 ship chrome.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- CAREGIVER OOS -->
+    <section class="section-block" id="caregiver">
+      <h2>Caregiver screens <span class="badge-oos">Not shipping in 2.1</span></h2>
+      <p>
+        ChatGPT Patient &amp; Family pack includes caregiver-facing chrome (dashboard, Margaret’s day, check-in needed).
+        These stay out of App Store 2.1 — shown here for context only.
+      </p>
+      <div class="grid3">
+        <div class="col">
+          <div class="col-label"><strong>Family overview</strong><span>Caregiver</span></div>
+          <div class="phone-frame"><img src="compare/caregiver/family-overview.png" alt="Caregiver family overview" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>Margaret’s day</strong><span>Caregiver</span></div>
+          <div class="phone-frame"><img src="compare/caregiver/margarets-day.png" alt="Caregiver Margaret day" width="390" height="844" loading="lazy"></div>
+        </div>
+        <div class="col">
+          <div class="col-label"><strong>Check-in needed</strong><span>Caregiver</span></div>
+          <div class="phone-frame"><img src="compare/caregiver/checkin-needed.png" alt="Caregiver check-in needed" width="390" height="844" loading="lazy"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TF FRAMES -->
+    <section class="section-block" id="tf">
+      <h2>Build 29 TF frames <span class="tag" style="font-weight:650;color:var(--muted);font-size:13px">(what Apple saw)</span></h2>
+      <p>
+        Optional reference from TestFlight clip frames. These show an earlier chrome:
+        <strong>4 tabs</strong> (Today · Meds · Progress · Settings — <em>no Family</em>),
+        live sample data (e.g. Olmezartan), and “Your day, recorded.” copy.
+        <code>frame-01</code> (Spotlight search) omitted — not app UI.
+      </p>
+      <div class="note-box">
+        Use these only as “what Apple already saw.” Do not regress the 5-tab Family chrome in the ship prototype back to this 4-tab layout.
+      </div>
+      <div class="tf-grid" id="tf-grid">
+        <!-- filled by script from known list for stable order -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    <p>
+      Assets: <code>compare/old/</code> (Playwright captures of ship),
+      <code>compare/chatgpt/</code> (cropped from Patient &amp; Family <code>*-full.png</code>),
+      <code>compare/caregiver/</code>, <code>compare/tf-frames/</code>.
+      Interactive prototype: <a href="./">index</a>.
+    </p>
+  </footer>
+
+  <script>
+    (function () {
+      const frames = [
+        "frame-02.png","frame-03.png","frame-04.png","frame-05.png","frame-06.png","frame-07.png","frame-08.png",
+        "frame_001.png","frame_002.png","frame_003.png","frame_004.png","frame_005.png","frame_006.png","frame_007.png","frame_008.png","frame_009.png","frame_010.png","frame_011.png",
+        "t01.jpg","t02.jpg","t03.jpg","t04.jpg","t05.jpg","t06.jpg","t07.jpg","t08.jpg","t09.jpg","t10.jpg","t11.jpg"
+      ];
+      const grid = document.getElementById("tf-grid");
+      if (!grid) return;
+      const frag = document.createDocumentFragment();
+      frames.forEach(function (name) {
+        const fig = document.createElement("figure");
+        fig.className = "tf-item";
+        const img = document.createElement("img");
+        img.src = "compare/tf-frames/" + name;
+        img.alt = name;
+        img.loading = "lazy";
+        const cap = document.createElement("figcaption");
+        cap.textContent = name.replace(/\.(png|jpg)$/i, "");
+        fig.appendChild(img);
+        fig.appendChild(cap);
+        frag.appendChild(fig);
+      });
+      grid.appendChild(frag);
+    })();
+  </script>
+</body>
+</html>
