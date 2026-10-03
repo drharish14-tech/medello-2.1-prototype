@@ -30,7 +30,16 @@
   --sans: "Instrument Sans", "Segoe UI", sans-serif;
   --serif: "Fraunces", Georgia, serif;
   --card-shadow: 0 1px 2px rgba(40, 54, 47, 0.05), 0 12px 32px var(--shadow);
+  /* Scroll surface ends above the tab bar. The band between them holds the FAB and toasts. */
+  --chrome-bottom: 148px;
+  --mask-solid: 56px;
   color-scheme: light;
+}
+
+@property --hold {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
 }
 
 * { box-sizing: border-box; }
@@ -84,6 +93,19 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   isolation: isolate;
 }
 
+/* Opaque through the clock and Dynamic Island, then a short fade so
+   scrolled headings and weekday letters cannot pass through them. */
+.phone::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 78px;
+  z-index: 29;
+  pointer-events: none;
+  background: linear-gradient(180deg, #FCFDFB 0 var(--mask-solid), rgba(252, 253, 251, 0) 78px);
+}
 .island {
   position: absolute;
   top: 10px;
@@ -115,10 +137,15 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 
 .screen {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: var(--chrome-bottom);
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 64px 24px 168px;
+  padding: 78px 24px 20px;
+  scroll-padding-top: 78px;
+  scroll-padding-bottom: 16px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -133,7 +160,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   color: var(--mut);
 }
 .h-serif {
-  margin: 8px 0 0;
+  margin: 4px 0 0;
   font-family: var(--serif);
   font-weight: 450;
   font-size: 34px;
@@ -156,13 +183,14 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   line-height: 1.15;
 }
 .section-label {
-  margin: 16px 0 8px;
+  margin: 10px 0 4px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--mut);
 }
+.section-label.tuck { margin-top: 28px; }
 
 .card {
   background: var(--card);
@@ -173,7 +201,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 
 /* Day arc */
 .day-card {
-  margin-top: 8px;
+  margin-top: 4px;
   padding: 16px 16px 12px;
   background:
     linear-gradient(180deg, rgba(232, 214, 186, 0.28), rgba(143, 191, 166, 0.08) 70%, #fff);
@@ -193,8 +221,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   color: var(--acc);
   font-variant-numeric: tabular-nums;
 }
-.arc-wrap { position: relative; height: 72px; margin-top: 8px; }
-.arc-wrap svg { position: absolute; inset: 0; width: 100%; height: 72px; }
+.arc-wrap { position: relative; height: 58px; margin-top: 6px; }
+.arc-wrap svg { position: absolute; inset: 0; width: 100%; height: 58px; }
 .arc-dot {
   position: absolute;
   width: 10px; height: 10px;
@@ -233,7 +261,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 }
 
 /* Next dose */
-.next-card { margin-top: 8px; padding: 16px; }
+.next-card { margin-top: 4px; padding: 12px 16px 12px; }
 .next-kicker {
   display: flex;
   align-items: center;
@@ -252,7 +280,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   flex-shrink: 0;
 }
 .dose-time {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -277,10 +305,11 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 .dose-sub { margin: 4px 0 0; font-size: 13px; color: var(--ink-soft); }
 
 .hold {
+  --hold: 0%;
   position: relative;
   display: block;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 8px;
   height: 48px;
   border: 0;
   border-radius: var(--r-md);
@@ -289,39 +318,41 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
+  transition: --hold 0.2s ease;
+}
+.hold.is-holding {
+  --hold: 100%;
+  transition: --hold 0.9s cubic-bezier(0.4, 0, 0.6, 1);
 }
 .hold-fill {
   position: absolute;
+  z-index: 0;
   inset: 0 auto 0 0;
-  width: 0;
+  width: var(--hold);
   background: linear-gradient(135deg, #4C9587, #37796C);
-  transition: width 0.2s ease;
-}
-.hold.is-holding .hold-fill {
-  width: 100%;
-  transition: width 0.9s cubic-bezier(0.4, 0, 0.6, 1);
 }
 .hold-label {
-  position: relative;
+  position: absolute;
   z-index: 1;
+  inset: 0;
   display: grid;
   place-items: center;
-  height: 100%;
   font-size: 15px;
   font-weight: 700;
-  color: var(--ink);
+  pointer-events: none;
 }
-.hold.is-holding .hold-label { animation: holdInk 0.9s linear forwards; }
-@keyframes holdInk {
-  0%, 42% { color: var(--ink); }
-  58%, 100% { color: #fff; }
+.hold-label-on { color: #fff; }
+.hold-label-ink {
+  z-index: 2;
+  color: var(--ink);
+  clip-path: inset(0 0 0 var(--hold));
 }
 
 .next-links {
   display: flex;
   justify-content: center;
   gap: 24px;
-  margin-top: 12px;
+  margin-top: 8px;
 }
 .linkish {
   border: 0;
@@ -382,7 +413,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 8px 0;
+  padding: 5px 0;
   border: 0;
   background: none;
   text-align: left;
@@ -432,7 +463,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 .earlier-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 650; line-height: 1.3; }
-.with-fab { padding-right: 56px; }
 .mini-check {
   width: 22px; height: 22px;
   border-radius: 50%;
@@ -484,7 +514,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 .fab {
   position: absolute;
   right: 16px;
-  bottom: 96px;
+  bottom: 88px;
   width: 52px; height: 52px;
   border: 0;
   border-radius: 50%;
@@ -776,6 +806,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 }
 .week-day { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
 .week-day em { font-style: normal; font-size: 11px; font-weight: 700; color: var(--mut); }
+.week-day.is-today em { color: var(--acc); }
+.week-day.is-today .bub { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--acc); }
 .bub {
   width: 32px; height: 32px;
   border-radius: 50%;
@@ -1002,6 +1034,13 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   font-size: 14px;
   font-weight: 700;
 }
+.ghost.block {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 16px;
+  font-size: 15px;
+}
 .ghost.quiet { color: var(--mut); }
 .note {
   margin-top: 12px;
@@ -1078,10 +1117,10 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 .overlay {
   position: absolute;
   inset: 0;
-  z-index: 14;
+  z-index: 27;
   overflow-y: auto;
   background: linear-gradient(175deg, #FAFCF8, #F0F5EE);
-  padding: 64px 24px 120px;
+  padding: 78px 24px 36px;
   scrollbar-width: none;
 }
 .overlay::-webkit-scrollbar { display: none; }
@@ -1232,11 +1271,10 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 
 .toast {
   position: absolute;
-  left: 50%;
-  bottom: 108px;
-  transform: translateX(-50%);
+  left: 16px;
+  right: 84px;
+  bottom: 98px;
   z-index: 36;
-  max-width: calc(100% - 48px);
   background: rgba(40, 54, 47, 0.94);
   color: #F6F9F7;
   border-radius: var(--r-pill);
@@ -1258,12 +1296,14 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   }
   .tabbar { bottom: max(18px, env(safe-area-inset-bottom)); }
   .home-ind { bottom: max(6px, calc(env(safe-area-inset-bottom) - 10px)); }
-  .screen { padding-bottom: calc(168px + env(safe-area-inset-bottom)); }
-  .overlay { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+  .screen { bottom: calc(var(--chrome-bottom) + env(safe-area-inset-bottom)); }
+  .fab { bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .toast { bottom: calc(98px + env(safe-area-inset-bottom)); }
+  .overlay { padding-bottom: calc(36px + env(safe-area-inset-bottom)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .scanline { animation: none; top: 40%; }
-  .hold.is-holding .hold-fill { transition: none; width: 100%; }
-  .hold.is-holding .hold-label { animation: none; color: #fff; }
+  .hold, .hold.is-holding { transition: none; }
+  .hold.is-holding { --hold: 100%; }
 }
