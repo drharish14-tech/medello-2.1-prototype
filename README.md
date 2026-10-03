@@ -6,6 +6,13 @@ Interactive, phone-framed patient chrome for **App Store 2.1** review. Visual sy
 
 **https://drharish14-tech.github.io/medello-2.1-prototype/**
 
+### Daylight (old AI-prominent look — locked 2026-10-03)
+
+**https://drharish14-tech.github.io/medello-2.1-prototype/daylight.html**
+
+Polished interactive prototype of the old Daylight phones: center sparkle orb (Today · Meds · orb · Progress · Settings), Hold to take, sparkle on each medicine, Add paths (Snap / Tell AI / Enter manually). Product name is Medello. This is not the ChatGPT Patient & Family 5-tab, and it does not replace the orb with Family.
+
+
 ### Design compare (corrected)
 
 **https://drharish14-tech.github.io/medello-2.1-prototype/compare.html**
