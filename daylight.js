@@ -25,7 +25,7 @@
         does: "Amoxicillin is an antibiotic used here for a short sinus course. This is sample copy, not medical advice.",
         how: "The sample schedule is twice a day, after meals, through day 5. Finish the course unless a clinician says otherwise.",
         sides: "Stomach upset is the note people mention most. Contact a clinician for rash, swelling, or trouble breathing.",
-        know: "4 tablets left in this sample. At two a day, that runs out Thursday."
+        know: "Day 3 of 5, with 2 days left. 4 tablets remain — at two a day, that runs out Thursday."
       }
     },
     {
@@ -97,7 +97,8 @@
     askLog: [],
     plan: "year",
     overlay: null,
-    manual: { name: "", strength: "500 mg", time: "8:00 AM" }
+    manual: { name: "", strength: "500 mg", time: "8:00 AM" },
+    tellText: "Metformin 500 twice a day with food"
   };
 
   var holdTimer = null;
@@ -226,7 +227,8 @@
         '<p class="dose-sub">1 tablet · Glucophage · 28 left · refill Aug 24</p>' +
         '<button class="hold" type="button" data-hold aria-label="Hold to take Metformin">' +
           '<span class="hold-fill" aria-hidden="true"></span>' +
-          '<span class="hold-label" data-hold-label>Hold to take</span>' +
+          '<span class="hold-label hold-label-on" aria-hidden="true">Hold to take</span>' +
+          '<span class="hold-label hold-label-ink">Hold to take</span>' +
         '</button>' +
         '<div class="next-links">' +
           '<button class="linkish" type="button" data-act="snooze">Snooze 15 min</button>' +
@@ -234,7 +236,7 @@
         '</div></section>';
     }
     var later = [
-      { id: "amox", time: "8:00 PM", name: "Amoxicillin 500 mg", sub: "after dinner · day 3 of 5", pill: "cap" },
+      { id: "amox", time: "8:00 PM", name: "Amoxicillin 500 mg", sub: "day 3 of 5 · 2 days left", pill: "cap" },
       { id: "ator", time: state.atorTime, name: "Atorvastatin 20 mg", sub: state.atorSub, pill: "round" }
     ].map(function (d) {
       var on = state.later[d.id];
@@ -252,9 +254,9 @@
       horizon() + '</section>' +
       hero +
       '<h2 class="section-label">Later today</h2>' +
-      '<div class="with-fab">' + later +
-      '<h2 class="section-label">Earlier</h2>' +
-      '<div class="earlier"><span class="earlier-time">8:00 AM</span><span class="earlier-name">Lisinopril · Vitamin D3 · Metformin</span><span class="mini-check" aria-label="Taken">✓</span></div></div>';
+      later +
+      '<h2 class="section-label tuck">Earlier</h2>' +
+      '<div class="earlier"><span class="earlier-time">8:00 AM</span><span class="earlier-name">Lisinopril · Amoxicillin · Metformin</span><span class="mini-check" aria-label="Taken">✓</span></div>';
   }
 
   function renderMeds() {
@@ -290,8 +292,13 @@
     var c = 2 * Math.PI * 46;
     var offset = c * (1 - n / 6);
     var week = [
-      ["W", "all", "✓"], ["T", "all", "✓"], ["F", "partial", "5"],
-      ["S", "all", "✓"], ["S", "all", "✓"], ["M", "missed", "×"], ["T", "partial", "3"]
+      { label: "We", state: "all", mark: "✓", today: false },
+      { label: "Th", state: "all", mark: "✓", today: false },
+      { label: "Fr", state: "partial", mark: "5", today: false },
+      { label: "Sa", state: "all", mark: "✓", today: false },
+      { label: "Su", state: "all", mark: "✓", today: false },
+      { label: "Mo", state: "missed", mark: "×", today: false },
+      { label: "Tu", state: "partial", mark: "3", today: true }
     ];
     var bars = [
       ["Metformin", 98, false],
@@ -301,7 +308,7 @@
     ];
     var refill = state.refill
       ? '<section class="refill"><div class="refill-n">4</div><div><h3>Amoxicillin is running low</h3>' +
-        '<p>4 left — at 2 a day you’ll run out Thursday.</p>' +
+        '<p>Day 3 of 5 · 4 left. At 2 a day you’ll run out Thursday — 2 days left.</p>' +
         '<div class="refill-actions"><button class="linkish is-acc" type="button" data-act="refill-set">Set refill reminder</button>' +
         '<button class="linkish" type="button" data-act="refill-dismiss">Dismiss</button></div></div></section>'
       : "";
@@ -316,7 +323,7 @@
         '<div><div class="adh">96%<i>▲ 3%</i></div><div class="adh-k">Adherence · August</div><div class="hairline"></div>' +
         '<div class="stats"><div><strong>94%</strong><span>On time</span></div><div><strong>168</strong><span>Doses taken</span></div><div><strong>3</strong><span>Missed</span></div></div></div></section>' +
       '<section class="card week"><div class="week-row">' + week.map(function (w) {
-        return '<div class="week-day"><em>' + w[0] + '</em><div class="bub ' + w[1] + '">' + w[2] + '</div></div>';
+        return '<div class="week-day' + (w.today ? " is-today" : "") + '"><em>' + w.label + '</em><div class="bub ' + w.state + '"' + (w.today ? ' aria-current="date"' : "") + '>' + w.mark + '</div></div>';
       }).join("") + '</div>' +
       '<div class="legend"><span><i class="a"></i>All taken</span><span><i class="p"></i>Partial</span><span><i class="m"></i>Missed</span></div></section>' +
       refill +
@@ -345,7 +352,7 @@
     screen.innerHTML =
       '<h1 class="screen-title">Settings</h1>' +
       '<section class="card profile"><div class="avatar" aria-hidden="true">M</div>' +
-      '<div><strong>Margaret</strong><span>Free plan · 3 of 3 medicines used</span></div>' +
+      '<div><strong>Margaret</strong><span>Free plan · ' + MEDS.length + ' of ' + MEDS.length + ' medicines used</span></div>' +
       '<button class="add-chip" type="button" data-act="premium">Upgrade</button></section>' +
       '<h2 class="section-label">Meal times</h2><div class="card group">' + meals + '</div>' +
       '<p class="fine">Doses anchor to meals — change a meal and its doses follow.</p>' +
@@ -436,7 +443,7 @@
         '<h2>' + esc(title) + '</h2>' +
         '<p class="lead">Placeholder copy for this prototype. Not a live model, and not medical advice.</p>' +
         blocks + log + chips +
-        '<button class="ghost" type="button" data-act="close-sheet" style="margin-top:16px">Close</button>';
+        '<button class="ghost block" type="button" data-act="close-sheet">Close</button>';
     } else if (state.sheet === "premium") {
       sheet.innerHTML =
         '<div class="grab"></div>' +
@@ -508,7 +515,8 @@
       overlay.innerHTML =
         '<div class="scan-stage"><div class="paper-doc" aria-hidden="true"><b style="width:70%"></b><b style="width:92%"></b><b style="width:54%"></b><b style="width:80%;margin-top:16px"></b><b style="width:62%"></b><div class="scanline"></div></div>' +
         '<h2 class="ov-title" style="margin-top:24px;font-size:22px">Reading the prescription…</h2>' +
-        '<p class="lead">Found <strong style="color:var(--ink)">Metformin 500 mg</strong> — checking it against the medicines database.</p></div>';
+        '<p class="lead">Found <strong style="color:var(--ink)">Metformin 500 mg</strong> — checking it against the medicines database.</p>' +
+        '<button class="ghost block" type="button" data-act="add">Cancel</button></div>';
     } else if (state.overlay === "scan-done") {
       overlay.innerHTML =
         '<div class="ov-head"><div class="back-title"><button class="icon-btn" type="button" data-act="add" aria-label="Back">‹</button><h2 class="ov-title" style="font-size:24px">Review</h2></div>' +
@@ -521,12 +529,21 @@
         '<div class="ov-head"><div class="back-title"><button class="icon-btn" type="button" data-act="add" aria-label="Back">‹</button><h2 class="ov-title" style="font-size:24px">Tell AI</h2></div>' +
         '<button class="icon-btn" type="button" data-act="close-overlay" aria-label="Close">✕</button></div>' +
         '<p class="lead">Tell Medello in your own words — name, dose, timing. This box does not call a model.</p>' +
-        '<div class="field"><label for="tell-text">In your words</label><textarea id="tell-text" placeholder="Metformin 500 twice a day with food">Metformin 500 twice a day with food</textarea></div>' +
+        '<div class="field"><label for="tell-text">In your words</label><textarea id="tell-text" placeholder="Metformin 500 twice a day with food">' + esc(state.tellText) + '</textarea></div>' +
         '<div class="chips"><button type="button" data-act="chip" data-arg="with food">with food</button>' +
         '<button type="button" data-act="chip" data-arg="for 7 days">for 7 days</button>' +
         '<button type="button" data-act="chip" data-arg="8 am">8 am</button></div>' +
         '<div class="ai-block"><div class="k">Sample reading</div><p id="tell-read">Medello would read: Metformin 500 mg, twice a day, with food. You still review before anything is saved.</p></div>' +
         '<button class="cta" type="button" data-act="tell-save">Review details</button>';
+    } else if (state.overlay === "tell-review") {
+      overlay.innerHTML =
+        '<div class="ov-head"><div class="back-title"><button class="icon-btn" type="button" data-act="tell" aria-label="Back">‹</button><h2 class="ov-title" style="font-size:24px">Review</h2></div>' +
+        '<button class="icon-btn" type="button" data-act="close-overlay" aria-label="Close">✕</button></div>' +
+        '<div class="ai-block" style="margin-top:16px"><div class="k">You said</div><p>' + esc(state.tellText) + '</p></div>' +
+        '<div class="ai-block"><div class="k">Medello read · sample</div><p><strong style="color:var(--ink)">Metformin 500 mg</strong> — twice a day, with food. This preview does not add it to the list until you confirm.</p></div>' +
+        '<p class="note">Placeholder reading, not a live model. Confirming here does not save a medicine.</p>' +
+        '<button class="cta" type="button" data-act="tell-confirm">Confirm review</button>' +
+        '<button class="ghost block" type="button" data-act="tell">Edit words</button>';
     } else if (state.overlay === "manual") {
       overlay.innerHTML =
         '<div class="ov-head"><div class="back-title"><button class="icon-btn" type="button" data-act="add" aria-label="Back">‹</button><h2 class="ov-title" style="font-size:24px">Enter manually</h2></div>' +
@@ -540,8 +557,16 @@
           ["7:30 AM", "8:00 AM", "12:30 PM", "1:00 PM", "7:30 PM", "9:00 PM"].map(function (s) {
             return '<option' + (s === state.manual.time ? " selected" : "") + '>' + s + '</option>';
           }).join("") + '</select></div>' +
-        '<p class="note">Nothing is stored outside this preview. You would confirm the card before a real save.</p>' +
-        '<button class="cta" type="button" data-act="manual-save">Save medicine</button>';
+        '<p class="note">Nothing is stored outside this preview. Review the card before it closes.</p>' +
+        '<button class="cta" type="button" data-act="manual-save">Review medicine</button>';
+    } else if (state.overlay === "manual-review") {
+      overlay.innerHTML =
+        '<div class="ov-head"><div class="back-title"><button class="icon-btn" type="button" data-act="manual" aria-label="Back">‹</button><h2 class="ov-title" style="font-size:24px">Review</h2></div>' +
+        '<button class="icon-btn" type="button" data-act="close-overlay" aria-label="Close">✕</button></div>' +
+        '<div class="ai-block" style="margin-top:16px"><div class="k">Ready to keep</div><p><strong style="color:var(--ink)">' + esc(state.manual.name) + " " + esc(state.manual.strength) + '</strong> — ' + esc(state.manual.time) + '. This preview does not add it to the list.</p></div>' +
+        '<p class="note">You reviewed the name, strength, and time. Confirming does not save outside this preview.</p>' +
+        '<button class="cta" type="button" data-act="manual-confirm">Confirm review</button>' +
+        '<button class="ghost block" type="button" data-act="manual">Edit details</button>';
     }
   }
 
@@ -653,6 +678,12 @@
       return;
     }
     if (act === "tell-save") {
+      var said = document.getElementById("tell-text");
+      state.tellText = (said && said.value.trim()) || state.tellText;
+      openOverlay("tell-review");
+      return;
+    }
+    if (act === "tell-confirm") {
       toast("Reviewed — nothing saved in this preview");
       closeOverlay();
       return;
@@ -663,6 +694,10 @@
       state.manual.strength = (document.getElementById("m-str") || {}).value || state.manual.strength;
       state.manual.time = (document.getElementById("m-time") || {}).value || state.manual.time;
       if (!state.manual.name) { toast("Add a name to review it"); return; }
+      openOverlay("manual-review");
+      return;
+    }
+    if (act === "manual-confirm") {
       toast(state.manual.name + " reviewed — not saved");
       closeOverlay();
     }
@@ -672,8 +707,9 @@
     if (holding || state.nextTaken || state.nextSkipped) return;
     holding = true;
     btn.classList.add("is-holding");
-    var label = btn.querySelector("[data-hold-label]");
-    if (label) label.textContent = "Keep holding…";
+    btn.querySelectorAll(".hold-label").forEach(function (label) {
+      label.textContent = "Keep holding…";
+    });
     clearTimeout(holdTimer);
     holdTimer = setTimeout(function () {
       holding = false;
@@ -688,8 +724,9 @@
     var btn = screen.querySelector("[data-hold]");
     if (!btn) return;
     btn.classList.remove("is-holding");
-    var label = btn.querySelector("[data-hold-label]");
-    if (label) label.textContent = "Hold to take";
+    btn.querySelectorAll(".hold-label").forEach(function (label) {
+      label.textContent = "Hold to take";
+    });
   }
 
   phone.addEventListener("click", function (e) {
